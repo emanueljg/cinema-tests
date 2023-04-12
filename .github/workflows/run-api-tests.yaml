@@ -40,9 +40,7 @@ jobs:
       with: 
         mysql root password: rootroot 
       # start up mysql
-    - run: sudo service mysql start
-      # TEMP: check status
-    - run: service mysql status
+    - run: sudo service mysql start || service mysql status
       # seed the db with initial dummy/test data
     - run: npm run seed-db
       # start the backend / rest-api-server 
