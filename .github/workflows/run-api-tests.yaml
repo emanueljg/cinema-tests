@@ -38,8 +38,13 @@ jobs:
       # (use same password as in settings)
     - uses: mirromutth/mysql-action@v1.1
       with: 
-        mysql root password: rootroot  
+        mysql root password: rootroot 
+      # start up mysql
+    - run: service mysql start
+      # TEMP: check status
     - run: service mysql status
+      # seed the db with initial dummy/test data
+    - run: npm run seed-db
       # start the backend / rest-api-server 
       # (without blocking the terminal - nohup)
     - run: nohup npm run backend &
