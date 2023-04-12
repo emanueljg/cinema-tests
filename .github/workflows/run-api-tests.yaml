@@ -40,7 +40,7 @@ jobs:
     #  with: 
     #    mysql root password: rootroot 
     - run: sudo service mysql start
-    - run: mysqladmin -u root -p'' password 'rootroot' 
+    - run: mysqladmin -u root -p 'password' password 'rootroot' 
       # start up mysql
     - run: sudo service mysql restart || service mysql status
       # seed the db with initial dummy/test data
