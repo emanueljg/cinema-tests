@@ -7,10 +7,14 @@ module.exports = class Acl {
 
   static checkRoute(req, table, method, isTable, isView) {
 
-    // rele not logged in, logged in or special (admin etc.)
+    // role not logged in, logged in or special (admin etc.)
     let role = req.session.user ?
       (req.session.user.userRole || 'logged in') :
       'not logged in';
+
+    // only allow these roles:
+    let allowedRoles = ['not logged in', 'logged in', 'not logged in'];
+    if (!allowedRoles.includes[role]) { role = 'not logged in'; }
 
     // log things
     console.log([
@@ -20,15 +24,13 @@ module.exports = class Acl {
       'method: ' + method
     ].join('\n'));
 
-    return true;
-
     // allow people to register (write to users)
-    if (role === 'not logged in' && table === 'users' && method === 'POST') {
+    if (role === 'not logged in' && table === 'users' && method === 'post') {
       return true;
     }
 
     // don't allow not logged in visitors to do anything else than read
-    if (role === 'not logged in' && method !== 'GET') {
+    if (role === 'not logged in' && method !== 'get') {
       return false;
     }
 
@@ -46,8 +48,8 @@ module.exports = class Acl {
   White-listing is usually done by setting a rule for every single
   method x table x role for each route that should be allowed
 
-  ['POST', 'users', 'not logged in']
-  ['POST', 'users', 'admin']
-  ['GET', 'users', 'admin']
+  ['post', 'users', 'not logged in']
+  ['post', 'users', 'admin']
+  ['get', 'users', 'admin']
 
 */
