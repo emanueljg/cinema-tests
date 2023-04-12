@@ -39,6 +39,7 @@ jobs:
     #- uses: mirromutth/mysql-action@v1.1
     #  with: 
     #    mysql root password: rootroot 
+    - run: sudo service mysql start
     - run: mysqladmin -u root -p'' password 'rootroot' 
       # start up mysql
     - run: sudo service mysql restart || service mysql status
