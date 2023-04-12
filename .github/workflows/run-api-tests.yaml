@@ -34,6 +34,11 @@ jobs:
       # of npm install -> installs all npm modules
       # mentioned in package.json, preferably during CI
     - run: npm ci
+      # install mysql and setup with correct root password
+      # (use same password as in settings)
+    - uses: mirromutth/mysql-action@v1.1
+      with: 
+        mysql root password: rootroot  
       # start the backend / rest-api-server 
       # (without blocking the terminal - nohup)
     - run: nohup npm run backend &
