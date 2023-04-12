@@ -11,6 +11,7 @@ jobs:
   # build, the name of the job, a server to create and auto configure
   build:
 
+    # on github actions this comes with MySQL 8.0 :)
     runs-on: ubuntu-latest
 
     strategy:
@@ -34,15 +35,12 @@ jobs:
       # of npm install -> installs all npm modules
       # mentioned in package.json, preferably during CI
     - run: npm ci
-      # install mysql and setup with correct root password
-      # (use same password as in settings)
-    #- uses: mirromutth/mysql-action@v1.1
-    #  with: 
-    #    mysql root password: rootroot 
+      # start mysql and change default password
+      # use the password from your settings.json fil in this repo
     - run: sudo service mysql start
     - run: mysqladmin --user=root --password=root password "rootroot"
-      # start up mysql
-    - run: sudo service mysql restart || service mysql status
+      # restart mysql
+    - run: sudo service mysql restart
       # seed the db with initial dummy/test data
     - run: npm run seed-db
       # start the backend / rest-api-server 
