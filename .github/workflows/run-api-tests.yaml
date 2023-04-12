@@ -39,6 +39,7 @@ jobs:
     - uses: mirromutth/mysql-action@v1.1
       with: 
         mysql root password: rootroot  
+    - run: service mysql status
       # start the backend / rest-api-server 
       # (without blocking the terminal - nohup)
     - run: nohup npm run backend &
