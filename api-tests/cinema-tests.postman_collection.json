@@ -760,6 +760,187 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Read auditoriums",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"// Set the users id as an environment variable",
+							"pm.environment.set('id', obj.id);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'auditorium'",
+							"let mockPlural = 'auditoriums'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// Test that the mockData previously used to",
+							"// create the user in the DB has indentical values",
+							"// for all properties compared to what we are reading from the DB",
+							"// but omit password from this check...",
+							"// Note: Expect userRole to be null since we haven't set it!",
+							"pm.test('Expect db values to equal original values for ' + mock, () => {",
+							"    pm.expect(obj).to.deep.equal(response);",
+							"});",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Read ' + mockPlural);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/auditoriums/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"auditoriums",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete auditoriums",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'auditorium'",
+							"let mockPlural = 'auditoriums'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"// Set the users id as an environment variable",
+							"pm.environment.set('id', obj.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'auditorium'",
+							"let mockPlural = 'auditoriums'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// affectedRows = rows deleted in db",
+							"pm.test(\"Check that affected rows is 1\", () => {",
+							"    pm.expect(response.affectedRows).to.equal(1);",
+							"});",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Delete ' + mockPlural);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/auditoriums/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"auditoriums",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
