@@ -1449,7 +1449,7 @@
 							"// Note: Expect userRole to be null since we haven't set it!",
 							"pm.test('Expect db values to equal original values for ' + mock, () => {",
 							"    pm.expect(obj.title).to.equal(response.title);",
-							"    pm.expect(obj).to.have.property('description')",
+							"    pm.expect(response).to.have.property('description')",
 							"    // actually deeply checking the description is gonna be a huge hassle",
 							"});",
 							"",
