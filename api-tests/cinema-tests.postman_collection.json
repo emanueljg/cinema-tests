@@ -326,19 +326,19 @@
 						"exec": [
 							"let mock = 'category'",
 							"let initialMockData = [{",
-							"  \"title\": \"action\",",
+							"  \"title\": \"_action\",",
 							"  \"description\": \"action desc\"",
 							"}, {",
-							"  \"title\": \"comedy\",",
+							"  \"title\": \"_comedy\",",
 							"  \"description\": \"comedy desc\" ",
 							"}, {",
-							"  \"title\": \"Thriller\",",
+							"  \"title\": \"_thriller\",",
 							"  \"description\": \"thriller desc\"",
 							"}, {",
-							"  \"title\": \"Romance\",",
+							"  \"title\": \"_romance\",",
 							"  \"description\": \"romance desc\"",
 							"}, {",
-							"  \"title\": \"horror\",",
+							"  \"title\": \"_horror\",",
 							"  \"description\": \"horror desc\"",
 							"}];",
 							"",
@@ -430,7 +430,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{title}}\",\n    \"description\": \"{{description}}\"\n\n}",
+					"raw": "{\n    \"title\": \"{{title}}\",\n    \"description\": \"{{description}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -447,6 +447,92 @@
 					"path": [
 						"api",
 						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete categories",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let envData = mock + 'Data'",
+							"let envIdx = mock + 'Index'",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"// Set the users id as an environment variable",
+							"pm.environment.set('id', obj.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data'",
+							"let envIdx = mock + 'Index'",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// affectedRows = rows deleted in db",
+							"pm.test(\"Check that affected rows is 1\", () => {",
+							"    pm.expect(response.affectedRows).to.equal(1);",
+							"});",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Delete ' + mockPlural);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/users/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"users",
+						"{{id}}"
 					]
 				}
 			},
