@@ -631,6 +631,135 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create auditoriums",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'auditorium'",
+							"let initialMockData = [{",
+							"  \"name\": \"auditorium1\"",
+							"}, {",
+							"  \"name\": \"auditorium2\"",
+							"}, {",
+							"  \"name\": \"auditorium3\"",
+							"}, {",
+							"  \"name\": \"auditorium4\"",
+							"}, {",
+							"  \"name\": \"auditorium5\"",
+							"}];",
+							"",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"if(!pm.environment.get(envData)){",
+							"   pm.environment.set(envData, JSON.stringify(initialMockData));",
+							"   pm.environment.set(envIdx, '0');",
+							"}",
+							"",
+							"// ------------------------------------------------------------------------------",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"let obj = mockData[idx];",
+							"",
+							"// set user properties as environement variables",
+							"for(let [key,val] of Object.entries(obj)){",
+							"    pm.environment.set(key,val);",
+							"}",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'auditorium'",
+							"let mockPlural = 'auditoriums'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// The response from the server",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// affectedRows = rows added in db",
+							"pm.test(\"Check that affected rows is 1\", () => {",
+							"    pm.expect(response.affectedRows).to.equal(1);",
+							"});",
+							"",
+							"// Auto increement id: starts at 1 in SQL",
+							"pm.test(\"Check that insertId is > 0\", () => {",
+							"    pm.expect(response.insertId).to.be.above(0);",
+							"});",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"// Add id to mockData",
+							"mockData[idx].id = response.insertId;",
+							"",
+							"// Repack changed data to environment variables",
+							"pm.environment.set(envData, JSON.stringify(mockData));",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Create ' + mockPlural);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{name}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/auditoriums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"auditoriums"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
