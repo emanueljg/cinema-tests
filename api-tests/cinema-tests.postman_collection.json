@@ -356,7 +356,7 @@
 							"let mockData = JSON.parse(pm.environment.get(envData));",
 							"let idx = +pm.environment.get(envIdx);",
 							"",
-							"let obj = mock[idx];",
+							"let obj = mockData[idx];",
 							"",
 							"// set user properties as environement variables",
 							"for(let [key,val] of Object.entries(obj)){",
