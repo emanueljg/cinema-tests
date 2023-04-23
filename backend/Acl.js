@@ -6,6 +6,8 @@ module.exports = class Acl {
   // req.sesssion.user -> logged in user if any
 
   static checkRoute(req, table, method, isTable, isView) {
+    // skip route checking
+    return true;
 
     // role not logged in, logged in or special (admin etc.)
     let role = req.session.user ?
