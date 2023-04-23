@@ -325,6 +325,10 @@
 					"script": {
 						"exec": [
 							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
 							"let initialMockData = [{",
 							"  \"title\": \"_action\",",
 							"  \"description\": \"action desc\"",
@@ -341,9 +345,6 @@
 							"  \"title\": \"_horror\",",
 							"  \"description\": \"horror desc\"",
 							"}];",
-							"",
-							"let envData = mock + 'Data';",
-							"let envIdx = mock + 'Index';",
 							"",
 							"if(!pm.environment.get(envData)){",
 							"   pm.environment.set(envData, JSON.stringify(initialMockData));",
@@ -376,7 +377,6 @@
 						"exec": [
 							"let mock = 'category'",
 							"let mockPlural = 'categories'",
-							"",
 							"let envData = mock + 'Data';",
 							"let envIdx = mock + 'Index';",
 							"",
@@ -554,8 +554,9 @@
 					"script": {
 						"exec": [
 							"let mock = 'category'",
-							"let envData = mock + 'Data'",
-							"let envIdx = mock + 'Index'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
 							"",
 							"// Unpack environment variables into normal local variables",
 							"let mockData = JSON.parse(pm.environment.get(envData));",
@@ -640,6 +641,10 @@
 					"script": {
 						"exec": [
 							"let mock = 'auditorium'",
+							"let mockPlural = 'auditoriums'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
 							"let initialMockData = [{",
 							"  \"name\": \"auditorium1\"",
 							"}, {",
@@ -651,9 +656,6 @@
 							"}, {",
 							"  \"name\": \"auditorium5\"",
 							"}];",
-							"",
-							"let envData = mock + 'Data';",
-							"let envIdx = mock + 'Index';",
 							"",
 							"if(!pm.environment.get(envData)){",
 							"   pm.environment.set(envData, JSON.stringify(initialMockData));",
@@ -768,8 +770,8 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"let mock = 'category'",
-							"let mockPlural = 'categories'",
+							"let mock = 'auditorium'",
+							"let mockPlural = 'auditoriums'",
 							"let envData = mock + 'Data';",
 							"let envIdx = mock + 'Index';",
 							"",
