@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "3458bbf1-4c1e-4fe5-84ee-6d0569131841",
+		"_postman_id": "126ef146-875e-4866-9fbc-67683f37e0ca",
 		"name": "Cinema-tests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27058649"
 	},
 	"item": [
 		{
@@ -310,6 +311,321 @@
 					"path": [
 						"api",
 						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create categories",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let initialMockData = [{",
+							"  \"title\": \"_action\",",
+							"  \"description\": \"action desc\"",
+							"}, {",
+							"  \"title\": \"_comedy\",",
+							"  \"description\": \"comedy desc\" ",
+							"}, {",
+							"  \"title\": \"_thriller\",",
+							"  \"description\": \"thriller desc\"",
+							"}, {",
+							"  \"title\": \"_romance\",",
+							"  \"description\": \"romance desc\"",
+							"}, {",
+							"  \"title\": \"_horror\",",
+							"  \"description\": \"horror desc\"",
+							"}];",
+							"",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"if(!pm.environment.get(envData)){",
+							"   pm.environment.set(envData, JSON.stringify(initialMockData));",
+							"   pm.environment.set(envIdx, '0');",
+							"}",
+							"",
+							"// ------------------------------------------------------------------------------",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"let obj = mockData[idx];",
+							"",
+							"// set user properties as environement variables",
+							"for(let [key,val] of Object.entries(obj)){",
+							"    pm.environment.set(key,val);",
+							"}",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// The response from the server",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// affectedRows = rows added in db",
+							"pm.test(\"Check that affected rows is 1\", () => {",
+							"    pm.expect(response.affectedRows).to.equal(1);",
+							"});",
+							"",
+							"// Auto increement id: starts at 1 in SQL",
+							"pm.test(\"Check that insertId is > 0\", () => {",
+							"    pm.expect(response.insertId).to.be.above(0);",
+							"});",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"// Add id to mockData",
+							"mockData[idx].id = response.insertId;",
+							"",
+							"// Repack changed data to environment variables",
+							"pm.environment.set(envData, JSON.stringify(mockData));",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Create ' + mockPlural);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"{{title}}\",\n    \"description\": \"{{description}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read categories",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"// Set the users id as an environment variable",
+							"pm.environment.set('id', obj.id);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data';",
+							"let envIdx = mock + 'Index';",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// Test that the mockData previously used to",
+							"// create the user in the DB has indentical values",
+							"// for all properties compared to what we are reading from the DB",
+							"// but omit password from this check...",
+							"// Note: Expect userRole to be null since we haven't set it!",
+							"pm.test('Expect db values to equal original values for ' + mock, () => {",
+							"    pm.expect(obj).to.deep.equal(response);",
+							"});",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Read ' + mockPlural);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/categories/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"categories",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete categories",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let envData = mock + 'Data'",
+							"let envIdx = mock + 'Index'",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"// Current user",
+							"let obj = mockData[idx];",
+							"",
+							"// Set the users id as an environment variable",
+							"pm.environment.set('id', obj.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let mock = 'category'",
+							"let mockPlural = 'categories'",
+							"let envData = mock + 'Data'",
+							"let envIdx = mock + 'Index'",
+							"",
+							"// Unpack environment variables into normal local variables",
+							"let mockData = JSON.parse(pm.environment.get(envData));",
+							"let idx = +pm.environment.get(envIdx);",
+							"",
+							"let response = pm.response.json();",
+							"",
+							"// Status code 200 = Ok, no server error",
+							"pm.test('Expect status code 200', () => {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"// affectedRows = rows deleted in db",
+							"pm.test(\"Check that affected rows is 1\", () => {",
+							"    pm.expect(response.affectedRows).to.equal(1);",
+							"});",
+							"",
+							"// Add 1 to userIndex and check if there is another user to add",
+							"idx++;",
+							"",
+							"if(!mockData[idx]){",
+							"    // all users added, reset userIndex to zero for next request",
+							"    pm.environment.set(envIdx,'0');",
+							"}",
+							"else {",
+							"    // \"loop\" - add the next user by repeating this request",
+							"    pm.environment.set(envIdx, idx);",
+							"    postman.setNextRequest('Delete ' + mockPlural);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/categories/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"categories",
 						"{{id}}"
 					]
 				}
