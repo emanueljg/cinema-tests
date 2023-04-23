@@ -1273,7 +1273,7 @@
 							"",
 							"let initialMockData = [{",
 							"  \"title\": \"movie1\",",
-							"  \"description\": '{ \\\"innerTag\\\": 1 }'",
+							"  \"description\": '{ \\\\\"innerTag\\\\\": 1 }'",
 							"}, {",
 							"  \"title\": \"movie2\",",
 							"  \"description\": JSON.stringify({",
