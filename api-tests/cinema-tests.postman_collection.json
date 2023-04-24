@@ -1520,7 +1520,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingNumber\": \"ABC111\",\n    \"screeningId\": 1,\n    \"userId\": 1\n}",
+					"raw": "{\n    \"bookingNumber\": \"111111\",\n    \"screeningId\": 1,\n    \"userId\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1543,7 +1543,7 @@
 			"response": []
 		},
 		{
-			"name": "Do booking 1 Copy",
+			"name": "Do booking 2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1570,7 +1570,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingNumber\": \"ABC222\",\n    \"screeningId\": 1,\n    \"userId\": 2\n}",
+					"raw": "{\n    \"bookingNumber\": \"222222\",\n    \"screeningId\": 1,\n    \"userId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1653,6 +1653,104 @@
 							"key": "seatNumber<",
 							"value": "2"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add booking 1 seat",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookingId\": {{booking1Id}},\n    \"seatId\": {{seat1Id}},\n    \"ticketTypeId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/bookingsXseats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"bookingsXseats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add booking 2 seat",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookingId\": {{booking2Id}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/bookingsXseats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"bookingsXseats"
 					]
 				}
 			},
