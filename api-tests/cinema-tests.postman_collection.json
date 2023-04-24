@@ -1491,25 +1491,15 @@
 			"response": []
 		},
 		{
-			"name": "Delete movies",
+			"name": "Get booking users",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"let mock = 'movie'",
-							"let mockPlural = 'movies'",
-							"let envData = mock + 'Data';",
-							"let envIdx = mock + 'Index';",
-							"// Unpack environment variables into normal local variables",
-							"let mockData = JSON.parse(pm.environment.get(envData));",
-							"let idx = +pm.environment.get(envIdx);",
-							"// Current user",
-							"let obj = mockData[idx];",
-							"",
-							"// Set the users id as an environment variable",
-							"pm.environment.set('id', obj.id);",
-							""
+							"let resp = pm.response.json()",
+							"pm.environment.set(\"usr1\", resp[0])",
+							"pm.environment.set(\"usr2\" = resp[1])"
 						],
 						"type": "text/javascript"
 					}
@@ -1518,39 +1508,6 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"let mock = 'movie'",
-							"let mockPlural = 'movies'",
-							"let envData = mock + 'Data';",
-							"let envIdx = mock + 'Index';",
-							"",
-							"// Unpack environment variables into normal local variables",
-							"let mockData = JSON.parse(pm.environment.get(envData));",
-							"let idx = +pm.environment.get(envIdx);",
-							"",
-							"let response = pm.response.json();",
-							"",
-							"// Status code 200 = Ok, no server error",
-							"pm.test('Expect status code 200', () => {",
-							"    pm.expect(pm.response.code).to.equal(200);",
-							"});",
-							"",
-							"// affectedRows = rows deleted in db",
-							"pm.test(\"Check that affected rows is 1\", () => {",
-							"    pm.expect(response.affectedRows).to.equal(1);",
-							"});",
-							"",
-							"// Add 1 to userIndex and check if there is another user to add",
-							"idx++;",
-							"",
-							"if(!mockData[idx]){",
-							"    // all users added, reset userIndex to zero for next request",
-							"    pm.environment.set(envIdx,'0');",
-							"}",
-							"else {",
-							"    // \"loop\" - add the next user by repeating this request",
-							"    pm.environment.set(envIdx, idx);",
-							"    postman.setNextRequest('Delete ' + mockPlural);",
-							"}",
 							""
 						],
 						"type": "text/javascript"
@@ -1558,10 +1515,19 @@
 				}
 			],
 			"request": {
-				"method": "DELETE",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:4000/api/movies/{{id}}",
+					"raw": "http://localhost:4000/api/users/?limit=2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1569,8 +1535,14 @@
 					"port": "4000",
 					"path": [
 						"api",
-						"movies",
-						"{{id}}"
+						"users",
+						""
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2"
+						}
 					]
 				}
 			},
