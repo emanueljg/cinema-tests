@@ -1491,15 +1491,16 @@
 			"response": []
 		},
 		{
-			"name": "Get booking users",
+			"name": "Do booking 1",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"let resp = pm.response.json()",
-							"pm.environment.set(\"usr1\", resp[0])",
-							"pm.environment.set(\"usr2\" = resp[1])"
+							"pm.environment.set(\"booking1Id\", pm.response.json().insertId)",
+							"",
+							"",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -1519,6 +1520,112 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
+					"raw": "{\n    \"screeningId\": 1,\n    \"userId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/booking",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Do booking 1 Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"booking1Id\", pm.response.json().insertId)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"screeningId\": 1,\n    \"userId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/booking",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get seats",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let resp = pm.response.json();",
+							"pm.environment.set(\"seat1\", JSON.stringify(resp[0]))",
+							"pm.environment.set(\"seat1Id\", resp[0].id)",
+							"pm.environment.set(\"seat2\", JSON.stringify(resp[1]))",
+							"pm.environment.set(\"seat2Id\", resp[1].id)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
 					"raw": "",
 					"options": {
 						"raw": {
@@ -1527,7 +1634,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/api/users/?limit=2",
+					"raw": "http://localhost:4000/api/seats?auditoriumId=1&seatNumber<=2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1535,12 +1642,15 @@
 					"port": "4000",
 					"path": [
 						"api",
-						"users",
-						""
+						"seats"
 					],
 					"query": [
 						{
-							"key": "limit",
+							"key": "auditoriumId",
+							"value": "1"
+						},
+						{
+							"key": "seatNumber<",
 							"value": "2"
 						}
 					]
