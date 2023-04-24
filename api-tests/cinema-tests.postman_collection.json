@@ -1543,7 +1543,7 @@
 			"response": []
 		},
 		{
-			"name": "Do booking 1",
+			"name": "Do booking",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1558,7 +1558,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"booking1Id\", pm.response.json().insertId)",
+							"pm.environment.set(\"bookingId\", pm.response.json().insertId)",
 							"",
 							"",
 							""
@@ -1573,56 +1573,6 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"bookingNumber\": \"111111\",\n    \"screeningId\": {{screeningId}},\n    \"userId\": 1\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:4000/api/bookings",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "4000",
-					"path": [
-						"api",
-						"bookings"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Do booking 2",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.environment.set(\"booking2Id\", pm.response.json().insertId)",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"bookingNumber\": \"222222\",\n    \"screeningId\": {{screeningId}},\n    \"userId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1714,7 +1664,7 @@
 			"response": []
 		},
 		{
-			"name": "Add booking 1 seat",
+			"name": "Add booking seat 1",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1740,7 +1690,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingId\": {{booking1Id}},\n    \"seatId\": {{seat1Id}},\n    \"ticketTypeId\": 1\n}",
+					"raw": "{\n    \"bookingId\": {{bookingId}},\n    \"seatId\": {{seat1Id}},\n    \"ticketTypeId\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1763,7 +1713,7 @@
 			"response": []
 		},
 		{
-			"name": "Add booking 2 seat",
+			"name": "Add booking seat 2",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1789,7 +1739,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingId\": {{booking2Id}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
+					"raw": "{\n    \"bookingId\": {{bookingId}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1850,7 +1800,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/api/occupied_seats?screeningId={{screeningId}}&occupiedSeats≈1, 2",
+					"raw": "http://localhost:4000/api/occupied_seats?screeningId={{screeningId}}&occupiedSeats=1, 2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1866,8 +1816,75 @@
 							"value": "{{screeningId}}"
 						},
 						{
-							"key": "occupiedSeats≈1, 2",
-							"value": null
+							"key": "occupiedSeats",
+							"value": "1, 2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check bookings_overview",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.expect(pm.response.json()).to.have.lengthOf(1)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookingId\": {{booking2Id}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/bookings_overview?bookingNumber=111111&seats=1, 2&screeningId={{screeningId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"bookings_overview"
+					],
+					"query": [
+						{
+							"key": "bookingNumber",
+							"value": "111111"
+						},
+						{
+							"key": "seats",
+							"value": "1, 2"
+						},
+						{
+							"key": "screeningId",
+							"value": "{{screeningId}}"
 						}
 					]
 				}
