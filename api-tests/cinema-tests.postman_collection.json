@@ -1497,9 +1497,6 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"booking1Id\", pm.response.json().insertId)",
-							"",
-							"",
 							""
 						],
 						"type": "text/javascript"
@@ -1509,6 +1506,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.environment.set(\"booking1Id\", pm.response.json().insertId)",
+							"",
+							"",
 							""
 						],
 						"type": "text/javascript"
@@ -1549,7 +1549,6 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"booking1Id\", pm.response.json().insertId)",
 							""
 						],
 						"type": "text/javascript"
@@ -1559,6 +1558,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.environment.set(\"booking2Id\", pm.response.json().insertId)",
 							""
 						],
 						"type": "text/javascript"
@@ -1599,11 +1599,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"let resp = pm.response.json();",
-							"pm.environment.set(\"seat1\", JSON.stringify(resp[0]))",
-							"pm.environment.set(\"seat1Id\", resp[0].id)",
-							"pm.environment.set(\"seat2\", JSON.stringify(resp[1]))",
-							"pm.environment.set(\"seat2Id\", resp[1].id)"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -1612,7 +1608,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"let resp = pm.response.json();",
+							"pm.environment.set(\"seat1\", JSON.stringify(resp[0]))",
+							"pm.environment.set(\"seat1Id\", resp[0].id)",
+							"pm.environment.set(\"seat2\", JSON.stringify(resp[1]))",
+							"pm.environment.set(\"seat2Id\", resp[1].id)"
 						],
 						"type": "text/javascript"
 					}
