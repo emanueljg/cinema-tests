@@ -1491,6 +1491,58 @@
 			"response": []
 		},
 		{
+			"name": "Create screening",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"screeningId\", pm.response.json().insertId)",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"time\": \"1970-01-01T01:00:00.000Z\",\n    \"movieId\": 1,\n    \"auditoriumId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/screenings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"screenings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Do booking 1",
 			"event": [
 				{
@@ -1520,7 +1572,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingNumber\": \"111111\",\n    \"screeningId\": 1,\n    \"userId\": 1\n}",
+					"raw": "{\n    \"bookingNumber\": \"111111\",\n    \"screeningId\": {{screeningId}},\n    \"userId\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1570,7 +1622,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingNumber\": \"222222\",\n    \"screeningId\": 1,\n    \"userId\": 2\n}",
+					"raw": "{\n    \"bookingNumber\": \"222222\",\n    \"screeningId\": {{screeningId}},\n    \"userId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1611,8 +1663,11 @@
 							"let resp = pm.response.json();",
 							"pm.environment.set(\"seat1\", JSON.stringify(resp[0]))",
 							"pm.environment.set(\"seat1Id\", resp[0].id)",
+							"pm.environment.set(\"seat1Number\", resp[0].seatNumber)",
 							"pm.environment.set(\"seat2\", JSON.stringify(resp[1]))",
-							"pm.environment.set(\"seat2Id\", resp[1].id)"
+							"pm.environment.set(\"seat2Id\", resp[1].id)",
+							"pm.environment.set(\"seat2Number\", resp[1].seatNumber)",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -1751,6 +1806,68 @@
 					"path": [
 						"api",
 						"bookingsXseats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check occupied_seats",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookingId\": {{booking2Id}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/occupied_seats?screeningId={{screeningId}}&occupiedSeats≈1, 2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"occupied_seats"
+					],
+					"query": [
+						{
+							"key": "screeningId",
+							"value": "{{screeningId}}"
+						},
+						{
+							"key": "occupiedSeats≈1, 2",
+							"value": null
+						}
 					]
 				}
 			},
