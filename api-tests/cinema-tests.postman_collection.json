@@ -1855,7 +1855,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bookingId\": {{booking2Id}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
+					"raw": "{\n    \"bookingId\": {{bookingId}},\n    \"seatId\": {{seat2Id}},\n    \"ticketTypeId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
